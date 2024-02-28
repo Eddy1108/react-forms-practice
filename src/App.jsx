@@ -1,73 +1,67 @@
 import { useState } from "react";
 import "./App.css";
+import BasicInfo from "./components/BasicInfo";
+import RadioGroup from "./components/RadioGroup";
+import Consent from "./components/Consent";
+import ComplainBox from "./components/ComplainBox";
 
 export default function App() {
 
   //TODO: Add your state fields here
+  // const [name, setName] = useState('')
+  // const [address, setAddress] = useState('')
+  // const [phone, setPhone] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [complaintText, setComplaintText] = useState('')
+  // const [contactType, setContactType] = useState('')
+  // const [consent, setConsent] = useState(false)
+
+  const initialFormState = {
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    complaintText: "",
+    contactType: "",
+    consent: false
+  }
+
+  const [formData, setFormData] = useState(initialFormState)
+
+
+
+  const submitfunc = event =>{
+    event.preventDefault()
+
+    fetch(URL, {
+      method: "POST",
+      //rest of fetch???
+      body: JSON.stringify(formData)
+    })
+
+    console.log(formData)
+
+    setFormData(initialFormState)
+
+    console.log(formData)
+
+
+  }
 
   return (
     <>
-      <form className="form">
+      <form className="form" onSubmit={(event) => submitfunc(event)}>
         <h2>Complaining form!</h2>
-        <div className="form__section-left">
-          <label>
-            Full name
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            Address
-            <input type="text" name="address" />
-          </label>
-          <label>
-            Phone Number
-            <input type="tel" name="phone" />
-          </label>
-
-          <label>
-            Email
-            <input type="email" name="email" />
-          </label>
-        </div>
-
+        <BasicInfo formData={formData} setFormData={setFormData}/>
+        
         <div className="form__section-right">
-          <label>
-            Write your complaint
-            <textarea
-              name="complaint"
-              rows="10"
-              placeholder="You can complain here"
-            ></textarea>
-          </label>
+          <ComplainBox formData={formData} setFormData={setFormData}/>
 
-          <div className="form__radio-group">
-            <p>How do you want to be contacted? </p>
-            <label>
-              <input type="radio" name="contact" value="phone" />
-              Phone
-            </label>
+          <RadioGroup formData={formData} setFormData={setFormData}/>
 
-            <label>
-              <input type="radio" name="contact" value="email" />
-              Email
-            </label>
-
-            <label>
-              <input type="radio" name="contact" value="post" />
-              Slow Mail
-            </label>
-
-            <label>
-              <input type="radio" name="contact" value="none" />
-              No contact!
-            </label>
-          </div>
-
-          <label>
-            I agree you take my data, and do whatever
-            <input type="checkbox" name="consent" id="consent" />
-          </label>
+          <Consent formData={formData} setFormData={setFormData} />
         </div>
-        <input type="submit" value="Submit!" />
+        <input type="submit" value="Submit!"/>
       </form>
     </>
   );
